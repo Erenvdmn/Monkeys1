@@ -1,0 +1,15 @@
+# Genel
+.DS_Store
+.env
+
+# Node.js için
+node_modules/
+npm-debug.log
+yarn-error.log
+dist/
+
+# VS Code
+.vscode/
+
+# Frontend build klasörleri (eğer varsa)
+build/
