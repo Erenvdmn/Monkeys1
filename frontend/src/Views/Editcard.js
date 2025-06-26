@@ -2,6 +2,7 @@ import React from 'react';
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
+import ApiRequest from '../Helpers/ApiManager';
 
 
 export default function Editcard() {
@@ -66,14 +67,7 @@ export default function Editcard() {
 
         try {
             const localIP = "192.168.0.250";
-            const res = await fetch(`http://${localIP}:5000/objects/${id}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                },
-                body: JSON.stringify(formData)
-            });
+            const res = await ApiRequest(`objects/${id}`, "PUT", JSON.stringify(formData));
 
             const data = await res.json();
 

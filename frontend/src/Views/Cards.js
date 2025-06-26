@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ApiRequest from '../Helpers/ApiManager';
 
 export default function Cards() {
     const [objects, setObjects] = useState([]);
@@ -10,14 +11,8 @@ export default function Cards() {
             const token = localStorage.getItem("token");
 
             try {
-                const localIP = "192.168.0.250";
-                const res = await fetch(`http://${localIP}:5000/objects`, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`
-                    }
-                });
+                
+                const res = await ApiRequest("objects", "GET");
 
                 if (res.ok) {
                     const data = await res.json();
@@ -40,12 +35,7 @@ export default function Cards() {
 
         try {
             const localIP = "192.168.0.250";
-            const res = await fetch(`http://${localIP}:5000/objects/${id}`, {
-                method: "DELETE",
-                headers: {
-                    "Authorization": `Bearer ${token}`
-                }
-            });
+            const res = await ApiRequest(`objects/${id}`, "DELETE");
 
             if (res.ok) {
                 setObjects(prev => prev.filter(obj => obj._id !== id));

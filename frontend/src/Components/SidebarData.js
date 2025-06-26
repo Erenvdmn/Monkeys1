@@ -23,6 +23,12 @@ export const SidebarData = [
         cName: "nav-text"
     },
     {
+        title: "Logs",
+        path: "/log",
+        icon: <IoIcons.IoMdList />,
+        cName: "nav-text"
+    },
+    {
         title: "Log Out",
         path: "/",
         icon: <IoIcons.IoMdLogOut />,

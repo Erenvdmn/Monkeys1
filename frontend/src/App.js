@@ -4,6 +4,7 @@ import Cards from './Views/Cards';
 import Home from './Views/Home';
 import PublicCardView from './Views/Publiccardview';
 import CardQR from './Views/CardQR';
+import Log from './Views/Log';
 import Editcard from './Views/Editcard';
 import Navbar from './Components/Navbar';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
@@ -50,6 +51,7 @@ export default function App() {
                 <Route path="/card-qr/:id" element={<CardQR/>} />
                 <Route path="/public-card/:id" element={<PublicCardView />} />
                 <Route path="/editcard/:id" element={<Editcard />} />
+                <Route path="/log" element={<Log />}/>
             </Routes>
         </BrowserRouter>
     )

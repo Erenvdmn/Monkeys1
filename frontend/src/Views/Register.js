@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ApiRequest from '../Helpers/ApiManager';
 
 export default function Register() {
     const [form, setForm] = useState({
@@ -28,13 +29,7 @@ export default function Register() {
         e.preventDefault();
 
         const localIP = "192.168.0.250"; 
-        const res = await fetch(`http://${localIP}:5000/register`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(form),
-        });
+        const res = await ApiRequest("register", "POST", JSON.stringify(form), false);
 
         if(!res.ok) {
             const errorData = await res.json();

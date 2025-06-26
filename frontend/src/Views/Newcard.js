@@ -1,6 +1,7 @@
 import React from 'react';
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
+import ApiRequest from '../Helpers/ApiManager';
 
 
 export default function Newcard() {
@@ -56,12 +57,7 @@ export default function Newcard() {
 
         try {
             const localIP = "192.168.0.250";
-            const res = await fetch(`http://${localIP}:5000/objects`, {
-                method: "GET",
-                headers: {
-                    "Authorization": `Bearer ${token}`
-                }
-            });
+            const res = await ApiRequest("objects", "GET");
 
             if (res.status === 401 || res.status === 403) {
                 handleInvalidToken();

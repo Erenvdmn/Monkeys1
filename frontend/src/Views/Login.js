@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import ApiRequest from "../Helpers/ApiManager";
 
 export default function App() {
     const [email, setEmail] = React.useState("");
@@ -18,13 +19,7 @@ export default function App() {
         e.preventDefault();
 
         const localIP = "192.168.0.250";
-        const res = await fetch(`http://${localIP}:5000/login`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ email, password }),
-        });
+        const res = await ApiRequest("login", "POST", JSON.stringify({ email, password }), false);
 
         if (!res.ok) {
             const errorData = await res.json();

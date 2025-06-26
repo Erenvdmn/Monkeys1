@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import ApiRequest from '../Helpers/ApiManager';
 
 export default function PublicCardView() {
     const [card, setCard] = useState(null);
@@ -12,14 +13,7 @@ export default function PublicCardView() {
             try {
                 const token = localStorage.getItem("token");
                 const localIP = "192.168.0.250"; // bilgisayarının IP’si
-                const res = await fetch(`http://${localIP}:5000/public/objects/${id}`, {
-
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`
-                    }
-                });
+                const res = await ApiRequest(`public/objects/${id}`, "GET");
 
                 if (res.ok) {
                     const data = await res.json();
