@@ -27,9 +27,17 @@ function Navbar() {
                     {SidebarData.map((item, index) => {
                         return (
                             <li key={index} className={item.cName}>
-                                <Link to={item.path} onClick={() => {
+                                <Link to={item.path} onClick={(e) => {
+                                    
                                     if(item.action === "logout") {
-                                        localStorage.removeItem("token");
+                                        e.preventDefault();
+                                        const confirmLogout = window.confirm("Are you sure you wanna Log Out?");
+                                        if(confirmLogout) {
+                                            localStorage.removeItem("token");
+                                            window.location.href = "/";
+                                        }else {
+                                            showSidebar();
+                                        }
                                     }
                                 }}>
                                     {item.icon}
