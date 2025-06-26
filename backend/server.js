@@ -110,7 +110,6 @@ app.get('/objects', verifyToken, async (req, res) => {
 });
 
 // edit the object
-
 app.put('/objects/:id', verifyToken, async (req, res) => {
   const { id } = req.params;
   const { title, description, color, importance } =req.body;

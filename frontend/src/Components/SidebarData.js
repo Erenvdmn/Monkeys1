@@ -21,5 +21,12 @@ export const SidebarData = [
         path: "/newcard",
         icon: <IoIcons.IoIosPaper />,
         cName: "nav-text"
+    },
+    {
+        title: "Log Out",
+        path: "/",
+        icon: <IoIcons.IoMdLogOut />,
+        cName: "nav-text",
+        action: "logout"
     }
 ]

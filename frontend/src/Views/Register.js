@@ -11,6 +11,14 @@ export default function Register() {
     const navigate = useNavigate();
     const [message, setMessage] = useState('');
 
+    React.useEffect(() => {
+            const token = localStorage.getItem("token");
+            if (token) {
+                console.log("token var");
+                navigate("/home");
+            }
+        });
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setForm({ ...form, [name]: value });

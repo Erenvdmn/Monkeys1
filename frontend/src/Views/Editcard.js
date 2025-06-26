@@ -9,7 +9,7 @@ export default function Editcard() {
     const [description, setDescription] = React.useState("");
     const [color, setColor] = React.useState("#000000");
     const [importance, setImportance] = React.useState("low");
-    const [objects, setObjects] = React.useState([]);
+    //const [objects, setObjects] = React.useState([]);
     const navigate = useNavigate();
     const { id } = useParams();
 
