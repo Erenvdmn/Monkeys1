@@ -10,7 +10,8 @@ export default function Cards() {
             const token = localStorage.getItem("token");
 
             try {
-                const res = await fetch("http://localhost:5000/objects", {
+                const localIP = "192.168.0.250";
+                const res = await fetch(`http://${localIP}:5000/objects`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
@@ -38,7 +39,8 @@ export default function Cards() {
         const token = localStorage.getItem("token");
 
         try {
-            const res = await fetch(`http://localhost:5000/objects/${id}`, {
+            const localIP = "192.168.0.250";
+            const res = await fetch(`http://${localIP}:5000/objects/${id}`, {
                 method: "DELETE",
                 headers: {
                     "Authorization": `Bearer ${token}`
@@ -67,6 +69,7 @@ export default function Cards() {
                         <p>Önemi: {object.importance}</p>
                         <div className='button-container'>
                             <button onClick={() => handleDelete(object._id)} className='delete-button'>Sil</button>
+                            <button className='edit-button' onClick={() => navigate(`/editcard/${object._id}`)}>Edit Card</button>
                             <button className='showqr-button' onClick={() => navigate(`/card-qr/${object._id}`)}>Show QR</button>
                         </div> 
                     </div>
@@ -126,6 +129,16 @@ export default function Cards() {
                 }
 
                 .showqr-button {
+                    padding: 10px;
+                    border: none;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    background-color:rgb(11, 14, 174);
+                    color: white;
+                    flex-shrink: 0;
+                }
+                
+                .edit-button {
                     padding: 10px;
                     border: none;
                     border-radius: 4px;

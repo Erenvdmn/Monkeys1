@@ -1,151 +1,97 @@
 import React from 'react';
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 
-export default function Newcard() {
-    const [email, setEmail] = React.useState("");
-    const [title, setTitle] = React.useState("");
+export default function Editcard() {
+    const [title, setTitle ] = React.useState("");
     const [description, setDescription] = React.useState("");
     const [color, setColor] = React.useState("#000000");
     const [importance, setImportance] = React.useState("low");
     const [objects, setObjects] = React.useState([]);
     const navigate = useNavigate();
+    const { id } = useParams();
 
-
-    // isTokenValid
     const isTokenValid = (token) => {
         try {
             const decodedToken = jwtDecode(token);
-            const currentTime = Date.now() / 1000; // Convert to seconds
-            return decodedToken.exp > currentTime; // Check if token is not expired
+            const currentTime = Date.now() /1000;
+            return decodedToken.exp > currentTime;
         } catch (error) {
-            console.error("Token decoding error:", error);
-            return false; // If decoding fails, consider token invalid
+            console.error("Token decoding error: ", error);
+            return false;
         }
     };
 
-    // Check if token is valid and navigate login page if not
     const handleInvalidToken = () => {
         localStorage.removeItem("token");
-        alert("Geçersiz veya süresi dolmuş token. Lütfen tekrar giriş yapın.");
+        alert("Geçersiz veya süresi dolmuş token. Lütfen tekrar giriş yapın.")
         navigate("/login");
-    };
+    }
 
     React.useEffect(() => {
-    const fetchData = async () => {
-        const token = localStorage.getItem("token");
+        const fetchCard = async () => {
+            const token = localStorage.getItem("token");
+            if (!token || !isTokenValid(token)) return handleInvalidToken();
 
-        if (!token) {
-            alert("Lütfen giriş yapın.");
-            return navigate("/login");
-        }
-
-        if (!isTokenValid(token)) {
-            handleInvalidToken();
-            return;
-        }
-
-        try {
-            const decodedToken = jwtDecode(token);
-            setEmail(decodedToken.email);
-        } catch (err) {
-            alert("Geçersiz giriş. Lütfen tekrar giriş yapın.");
-            return navigate("/login");
-        }
-
-        try {
-            const localIP = "192.168.0.250";
-            const res = await fetch(`http://${localIP}:5000/objects`, {
-                method: "GET",
-                headers: {
-                    "Authorization": `Bearer ${token}`
-                }
-            });
-
-            if (res.status === 401 || res.status === 403) {
-                handleInvalidToken();
-                return;
-            }
-
-            if (res.ok) {
+            try {
+                const localIP = "192.168.0.250";
+                const res = await fetch(`http://${localIP}:5000/public/objects/${id}`);
                 const data = await res.json();
-                setObjects(data); // ← gelen veriyi state'e kaydet
-            } else {
-                console.error("Nesneler alınamadı");
+                setTitle(data.title);
+                setDescription(data.description);
+                setColor(data.color);
+                setImportance(data.importance)
+            }catch(error) {
+                console.error("Card couldn't bring", error)
             }
-        } catch (error) {
-            alert("Sunucu hatası");
-            console.error(error);
-        }
-    };
+        };
 
-    fetchData();
-}, []);
+        fetchCard();
+    }, [id]);
 
 
-        const handleSubmit = async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-
         const token = localStorage.getItem("token");
+        if(!token || !isTokenValid(token)) return handleInvalidToken();
 
-
-        if (!token || !isTokenValid(token)) {
-            handleInvalidToken();
-            return;
-        }
-        
-        // Handle form submission here
         const formData = {
             title,
             description,
             color,
             importance
         };
-        
-        console.log('Form submitted:', formData);
-        
+
         try {
             const localIP = "192.168.0.250";
-            const res = await fetch(`http://${localIP}:5000/objects`, {
-                method: "POST",
+            const res = await fetch(`http://${localIP}:5000/objects/${id}`, {
+                method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}` // Include token in the request header
+                    "Authorization": `Bearer ${token}`
                 },
                 body: JSON.stringify(formData)
             });
 
-            if (res.status === 401 || res.status === 403) {
-                handleInvalidToken();
-                return;
-            }
-
             const data = await res.json();
 
             if (res.ok) {
-                setObjects(prevObjects => [...prevObjects, data]); // Add new object to the state
-                console.log("Object created successfully:", data);
-                alert("Object created successfully!");
-                // Optionally, reset form fields
-                setTitle("");
-                setDescription("");
-                setColor("#000000");
-                setImportance("low");
-                navigate('/cards');
+                alert("Card updated");
+                navigate("/cards")
             } else {
-                console.error("Error creating object:", data.message);
-                alert(data.message || "Error creating object");
+                alert(data.message || "There is an error while updating")
             }
-        }catch (error) {
-            console.error("Error:", error);
-            alert("sunucu hatası");
+        } catch (error) {
+            console.error("Sunucu hatası: ", error);
+            alert("Sunucu hatası")
         }
-    };
+    }
 
-    return (
+        return (
         <div style={{ textAlign: 'center', marginTop: '50px' }}>
-            <h1>Yeni Card Oluşturun!</h1>
+            <h1>Card Düzenleme</h1>
             
             
             <form onSubmit={handleSubmit}>
@@ -219,7 +165,7 @@ export default function Newcard() {
                         marginTop: '10px'
                     }}
                 >
-                    Oluştur
+                    Düzenle
                 </button>
             </form>
         </div>

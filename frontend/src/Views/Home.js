@@ -54,18 +54,7 @@ export default function Home() {
         fetchData();
     });
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        const token = localStorage.getItem("token");
-
-        if(!token || !isTokenValid(token)) {
-            handleInvalidToken();
-            return;
-        }
-
-
-    };
+    
 
 
     return (

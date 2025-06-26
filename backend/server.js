@@ -15,7 +15,8 @@ const app = express();
 app.use(cors({
   origin: [
     'http://localhost:3000',
-    'http://192.168.1.102:3000'
+    'http://192.168.0.250:3000',
+    'http://192.168.0.20:3000'
   ],
   credentials: true
 }));
@@ -104,6 +105,38 @@ app.get('/objects', verifyToken, async (req, res) => {
     res.status(200).json(objects)
   }catch (error) {
     console.error('Error fetching objects:', error);
+    return res.status(500).json({ message: 'Sunucu hatası' });
+  }
+});
+
+// edit the object
+
+app.put('/objects/:id', verifyToken, async (req, res) => {
+  const { id } = req.params;
+  const { title, description, color, importance } =req.body;
+
+  console.log("ID:", id);
+  console.log("User ID:", req.user.id);
+
+  if (!title || !description || !color || !importance) {
+    return res.status(400).json({ message: 'Tüm alanlar gerekli' });
+  }
+
+  try {
+    const object = await ObjectModel.findOne({_id: id, userId: req.user.id});
+    if (!object) {
+      return res.status(404).json({ message: 'Nesne bulunamadı veya yetkiniz yok'});
+    }
+
+    object.title = title;
+    object.description = description;
+    object.color = color;
+    object.importance = importance;
+
+    await object.save();
+    return res.status(200).json({message: 'Object updated', object});
+  } catch (error) {
+    console.error('Error editing object:', error);
     return res.status(500).json({ message: 'Sunucu hatası' });
   }
 });

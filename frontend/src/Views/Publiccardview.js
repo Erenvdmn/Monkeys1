@@ -11,7 +11,7 @@ export default function PublicCardView() {
         const fetchCard = async () => {
             try {
                 const token = localStorage.getItem("token");
-                const localIP = "192.168.1.102"; // bilgisayarının IP’si
+                const localIP = "192.168.0.250"; // bilgisayarının IP’si
                 const res = await fetch(`http://${localIP}:5000/public/objects/${id}`, {
 
                     method: "GET",

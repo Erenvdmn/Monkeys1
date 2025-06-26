@@ -7,7 +7,7 @@ export default function CardQR() {
     const { id } = useParams();
     const navigate = useNavigate();
     
-    const localIP = "192.168.1.102"; 
+    const localIP = "192.168.0.250"; 
     const qrUrl = `http://${localIP}:3000/public-card/${id}`;
 
     return (

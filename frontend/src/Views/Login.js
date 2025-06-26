@@ -10,7 +10,8 @@ export default function App() {
     const handleLogin = async (e) => {
         e.preventDefault();
 
-        const res = await fetch("http://localhost:5000/login", {
+        const localIP = "192.168.0.250";
+        const res = await fetch(`http://${localIP}:5000/login`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

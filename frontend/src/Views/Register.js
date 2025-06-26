@@ -19,13 +19,20 @@ export default function Register() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const res = await fetch('http://localhost:5000/register', {
+        const localIP = "192.168.0.250"; 
+        const res = await fetch(`http://${localIP}:5000/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(form),
         });
+
+        if(!res.ok) {
+            const errorData = await res.json();
+            setMessage(errorData.message || "Giriş başarısız");
+            return; 
+        }
 
         const data = await res.json();
         setMessage(data.message);
