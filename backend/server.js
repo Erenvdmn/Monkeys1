@@ -59,6 +59,17 @@ function verifyToken(req, res, next) {
 
 
 
+// Bring all the entries
+app.get('/entries', async (req, res) => {
+  try {
+    const entries = await Entry.find().sort({date:-1});
+    res.status(200).json(entries);
+  }catch{
+    console.error('Error fetching entries: ', error);
+    res.status(500).json({message: 'sunucu hatası'});
+  }
+})
+
 // Public endpoint for QR code access (no authentication required)
 app.get('/public/objects/:id', async (req, res) => {
     try {

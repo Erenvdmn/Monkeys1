@@ -48,10 +48,15 @@ export default function App() {
                         <Home />
                     </>
                 } />
+                <Route path="/log" element={
+                    <>
+                        <Navbar />
+                        <Log />
+                    </>
+                    }/>
                 <Route path="/card-qr/:id" element={<CardQR/>} />
                 <Route path="/public-card/:id" element={<PublicCardView />} />
                 <Route path="/editcard/:id" element={<Editcard />} />
-                <Route path="/log" element={<Log />}/>
             </Routes>
         </BrowserRouter>
     )

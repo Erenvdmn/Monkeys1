@@ -34,7 +34,6 @@ export default function Cards() {
         const token = localStorage.getItem("token");
 
         try {
-            const localIP = "192.168.0.250";
             const res = await ApiRequest(`objects/${id}`, "DELETE");
 
             if (res.ok) {
