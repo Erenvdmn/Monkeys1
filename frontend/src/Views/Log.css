@@ -1,0 +1,190 @@
+/* Container for the logs */
+.logs-list {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+/* Styled table */
+.styled-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 16px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Table header */
+.styled-table thead {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.styled-table thead th {
+  padding: 15px 20px;
+  text-align: left;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 14px;
+}
+
+/* Table body */
+.styled-table tbody tr {
+  border-bottom: 1px solid #e9ecef;
+  transition: all 0.3s ease;
+}
+
+.styled-table tbody tr:nth-child(even) {
+  background-color: #f8f9fa;
+}
+
+.styled-table tbody tr:hover {
+  background-color: #e3f2fd;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.styled-table tbody td {
+  padding: 12px 20px;
+  border: none;
+  color: #495057;
+  font-size: 14px;
+}
+
+/* Email column styling */
+.styled-table tbody td:first-child {
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+/* Success/Failure status styling */
+.styled-table tbody td:nth-child(2) {
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+/* Date column styling */
+.styled-table tbody td:last-child {
+  color: #6c757d;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+}
+
+/* Responsive design */
+@media screen and (max-width: 768px) {
+  .logs-list {
+    padding: 10px;
+  }
+  
+  .styled-table {
+    font-size: 14px;
+  }
+  
+  .styled-table thead th,
+  .styled-table tbody td {
+    padding: 10px 12px;
+  }
+  
+  .styled-table thead th {
+    font-size: 12px;
+  }
+  
+  .styled-table tbody td {
+    font-size: 12px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .styled-table {
+    font-size: 12px;
+  }
+  
+  .styled-table thead th,
+  .styled-table tbody td {
+    padding: 8px 10px;
+  }
+  
+  .styled-table thead th {
+    font-size: 11px;
+  }
+  
+  .styled-table tbody td {
+    font-size: 11px;
+  }
+}
+
+/* Loading state (optional - for when data is being fetched) */
+.logs-list.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* Empty state styling */
+.styled-table tbody tr.empty-state td {
+  text-align: center;
+  padding: 40px 20px;
+  color: #6c757d;
+  font-style: italic;
+}
+
+/* Success/failure icon styling */
+.success-icon {
+  color: #28a745;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.failure-icon {
+  color: #dc3545;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* Alternative styled checkmark and X */
+.success-check {
+  color: #28a745;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.success-check:before {
+  content: '✓';
+}
+
+.failure-x {
+  color: #dc3545;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.failure-x:before {
+  content: '✗';
+}
+
+/* Circular background style */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: bold;
+  color: white;
+}
+
+.status-badge.success {
+  background-color: #28a745;
+}
+
+.status-badge.failure {
+  background-color: #dc3545;
+}

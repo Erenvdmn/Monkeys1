@@ -18,7 +18,6 @@ export default function App() {
     const handleLogin = async (e) => {
         e.preventDefault();
 
-        const localIP = "192.168.0.250";
         const res = await ApiRequest("login", "POST", JSON.stringify({ email, password }), false);
 
         if (!res.ok) {

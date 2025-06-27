@@ -56,7 +56,6 @@ export default function Newcard() {
         }
 
         try {
-            const localIP = "192.168.0.250";
             const res = await ApiRequest("objects", "GET");
 
             if (res.status === 401 || res.status === 403) {

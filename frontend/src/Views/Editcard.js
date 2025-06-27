@@ -66,7 +66,6 @@ export default function Editcard() {
         };
 
         try {
-            const localIP = "192.168.0.250";
             const res = await ApiRequest(`objects/${id}`, "PUT", JSON.stringify(formData));
 
             const data = await res.json();

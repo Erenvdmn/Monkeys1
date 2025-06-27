@@ -17,6 +17,11 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
+    },
+    loginAttempts: {
+        count: {type: Number, default: 0},
+        lastAttempt : { type: Date},
+        banUntil: { type: Date, default: null}
     }
 }, {
     timestamps: true

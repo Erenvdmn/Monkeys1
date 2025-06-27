@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { text } from 'express';
 import mongoose from 'mongoose';
 import cors from "cors";
 import User from "./models/User.js";
@@ -7,20 +7,15 @@ import ObjectModel from './models/Object.js';
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
+import puppeteer from 'puppeteer';
+
 
 
 
 dotenv.config();
 
 const app = express();
-app.use(cors({
-  origin: [
-    'http://localhost:3000',
-    'http://192.168.0.250:3000',
-    'http://192.168.0.20:3000'
-  ],
-  credentials: true
-}));
+app.use(cors());
 
 app.use(express.json());
 
@@ -58,6 +53,24 @@ function verifyToken(req, res, next) {
 }
 
 
+//scrapper
+app.get('/dolar', async(req, res) => {
+  try {
+    const browser = await puppeteer.launch({ headless: true });
+    const page = await browser.newPage();
+    await page.goto("https://bigpara.hurriyet.com.tr/doviz/dolar/", {
+      waitUntil: "networkidle2",
+    });
+
+    const dolar = await page.$eval(".value", el => el.innerHTML);
+    console.log("Güncel dolar kuru:", dolar);
+    await browser.close();
+    res.json({ kur: dolar });
+  } catch (error) {
+    console.error("Dolar verisi alınamadı: ", error);
+    res.status(500).json({ message: "Dolar kuru alınamadı"})
+  }
+});
 
 // Bring all the entries
 app.get('/entries', async (req, res) => {
@@ -217,48 +230,64 @@ app.post('/login', async (req, res) => {
 
   if (!email || !password) {
     return res.status(400).json({ message: 'Email ve şifre gerekli' });
-
   }
 
   try {
-    const user =await User.findOne({ email });
+    const user = await User.findOne({ email });
     if (!user) {
       return res.status(401).json({ message: 'Kullanıcı bulunamadı' });
     }
 
+    // Ban control
+    const now = new Date();
+    const tenMinutesAgo = new Date(now.getTime() - 10 * 60 * 1000);
+    const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000);
+
+    // SControl if it banned in 10 min
+    const lastEntries = await Entry.find({ email }).sort({ createdAt: -1 }).limit(5);
+
+    // is there 3 false attempt in 5 min
+    const recentFails = await Entry.find({
+      email,
+      isCorrect: false,
+      createdAt: { $gte: fiveMinutesAgo }
+    });
+
+    if (recentFails.length >= 3) {
+      // 10 min ban
+      const lastFailTime = recentFails[recentFails.length - 1].createdAt;
+      const banExpireTime = new Date(lastFailTime.getTime() + 10 * 60 * 1000);
+
+      if (now < banExpireTime) {
+        return res.status(403).json({ message: "Çok fazla hatalı giriş yapıldı. Lütfen 10 dakika sonra tekrar deneyin." });
+      }
+    }
+
+    // password control
     const isPasswordValid = await bcrypt.compare(password, user.password);
+    const newEntry = new Entry({ email, isCorrect: isPasswordValid });
+    await newEntry.save();
+
     if (!isPasswordValid) {
-      const isCorrect = false;
-      const newEntry = new Entry({email, isCorrect});
-      newEntry.save()
       return res.status(401).json({ message: 'Geçersiz şifre' });
     }
 
-    const isCorrect = true;
-    const newEntry = new Entry({email, isCorrect});
-    newEntry.save()
+    // create token if password correct
     const token = jwt.sign(
-        { id: user._id, email: user.email },
-        process.env.JWT_SECRET,
-        { expiresIn: '1h'}
+      { id: user._id, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: '1m' }
     );
 
     return res.json({
-        message: 'Giriş başarılı',
-        token,
-        user: { id: user._id, email: user.email}
+      message: 'Giriş başarılı',
+      token,
+      user: { id: user._id, email: user.email }
     });
 
-    
-
-    
-
   } catch (error) {
-    const newEntry = new Entry({email,password});
-    newEntry.save()
     console.error('Login error:', error);
     return res.status(500).json({ message: 'Sunucu hatası' });
-    
   }
 });
 

@@ -11,8 +11,6 @@ export default function PublicCardView() {
     useEffect(() => {
         const fetchCard = async () => {
             try {
-                const token = localStorage.getItem("token");
-                const localIP = "192.168.0.250"; // bilgisayarının IP’si
                 const res = await ApiRequest(`public/objects/${id}`, "GET");
 
                 if (res.ok) {
